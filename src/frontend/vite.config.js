@@ -1,13 +1,16 @@
 import { fileURLToPath, URL } from "url";
 import { sveltekit } from "@sveltejs/kit/vite";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import environment from "vite-plugin-environment";
 import dotenv from "dotenv";
 
 dotenv.config({ path: "../../.env" });
 
+// const env = loadEnv("development", process.cwd(), "");
+
 export default defineConfig({
   build: {
+    target: "esnext",
     emptyOutDir: true,
   },
   optimizeDeps: {
@@ -17,6 +20,15 @@ export default defineConfig({
       },
     },
   },
+  // define: {
+  //   "process.env": Object.entries(env).reduce(
+  //     (env, [key, value]) => ({
+  //       ...env,
+  //       [key]: JSON.stringify(value),
+  //     }),
+  //     {}
+  //   ),
+  // },
   server: {
     proxy: {
       "/api": {

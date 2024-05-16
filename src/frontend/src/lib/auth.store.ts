@@ -57,9 +57,10 @@ const init = async (): Promise<AuthStore> => {
       new Promise<void>(async (resolve, reject) => {
         authClient = authClient ?? (await AuthClient.create());
 
-        const identityProvider = import.meta.env.DEV
-          ? "http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:8080/"
-          : "https://identity.internetcomputer.org/";
+        const identityProvider =
+          (process.env.DFX_NETWORK as string) === "local"
+            ? "http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:8080/"
+            : "https://identity.internetcomputer.org/";
         await authClient.login({
           identityProvider,
           maxTimeToLive: BigInt(7) * BigInt(24) * BigInt(3_600_000_000_000), // 1 week
