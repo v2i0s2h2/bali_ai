@@ -1,0 +1,5 @@
+service: () -> {
+    get_user: () -> (record {"principal":principal; user_id:opt text}) query;
+    greet: (text) -> (text) query;
+    register: () -> (text);
+}
