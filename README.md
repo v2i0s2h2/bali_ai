@@ -37,24 +37,28 @@ Begin by opening a terminal window.
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
+Here's the corrected syntax for the README:
 
 **Deploy the Local Internet Identity**: Run the following command to deploy the local Internet Identity:
-    ```
-    dfx deploy internet_identity
-    ```
+
+```
+dfx deploy internet_identity
+```
 
 **Deploy the Backend**: Follow the instructions in the backend README to deploy the backend.
- ```
-    dfx deploy backend
-    ```
 
-**Generate Backend**:
- ```
-    dfx deploy backend
-    ```
+```
+dfx deploy backend
+```
+
+**Generate Backend**: 
+
+```
+dfx deploy backend
+```
 
 **Deploy the Frontend**: Follow the instructions in the frontend README to deploy the frontend.
 
- ```
-    dfx deploy frontend
-    ```
+```
+dfx deploy frontend
+```
