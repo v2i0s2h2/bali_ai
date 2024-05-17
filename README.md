@@ -57,7 +57,7 @@ dfx deploy backend
 dfx generate backend
 ```
 
-**Deploy the Frontend**: Follow the instructions in the frontend README to deploy the frontend.
+**Deploy the Frontend**: 
 
 ```
 npm start
