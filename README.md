@@ -1,57 +1,120 @@
-# baatcheet
+## Overview
+- Bali_Ai like a chat bot using Google AI Studio api,
+can generate text, translate languages, write different kinds of creative content, and answer your questions in an informative way.
 
-Welcome to your new baatcheet project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+## Data Flow
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+1. The user enters a prompt or input in the frontend UI (e.g., a chat interface or input field).
+2. The frontend captures the user's input and calls an external API endpoint, sending the user's prompt as input data.
+3. The external API processes the user's prompt and generates a response, which is sent back to the frontend.
+4. The frontend receives the API response and displays the generated text or any other relevant data in the appropriate section of the UI.
+5. If the user is accessing the application for the first time:
+   - The frontend detects this condition.
+   - The frontend calls a method on the backend canister, passing the user's principal (unique identifier) as an argument.
+   - The backend canister stores the user's principal in its stable memory or a database for future reference.
 
-To learn more before you start working with baatcheet, see the following documentation available online:
+### Prerequisites
 
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
+Before you begin, ensure you have met the following requirements:
 
-If you want to start working on your project right away, you might want to try the following commands:
+- **dfx**: You have installed the latest version of the DFINITY Canister SDK, `dfx`. You can download it from the DFINITY SDK page. [installation guide](https://demergent-labs.github.io/azle/get_started.html#installation) 
 
-```bash
-cd baatcheet/
-dfx help
-dfx canister --help
+- **Node.js**: You have installed Node.js, version 18 or above. You can download it from the Node.js website. nvm install v20.11.0
+
+
+- **Google AI Studio**: The project uses Google AI Studio for generating questions and verifying feedback authenticity. The model used is `Gemini Pro`. You can get an API Key from [Google AI Studio](https://makersuite.google.com/) for free.
+If it is difficult to get the API key, feel free to use this API key    AIzaSyDmH2DqyoQ0qNJlT9WHG84CMkJO3P9xxjE
+
+Please ensure all these prerequisites are met before proceeding with the setup of the project.
+
+### Developing
+
+Begin by opening a terminal window.
+
+ ### Step 1: Navigate into the folder containing the project's files and start a local instance of the Internet Computer with the command:
+
+`cd bali_ai`
+`dfx start --background --clean`
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+
+**Deploy the Local Internet Identity**: Run the following command to deploy the local Internet Identity:
+
+```
+dfx deploy internet_identity
 ```
 
-## Running the project locally
+**Deploy the Backend**: Follow the instructions in the backend README to deploy the backend.
 
-If you want to test your project locally, you can use the following commands:
-
-```bash
-# Starts the replica, running in the background
-dfx start --background
-
-# Deploys your canisters to the replica and generates your candid interface
+```
 dfx deploy backend
 ```
 
-Once the job completes, your application will be available at `http://localhost:8080?canisterId={asset_canister_id}`.
+**Generate Backend**: 
 
-If you have made changes to your backend canister, you can generate a new candid interface with
-
-```bash
-npm run generate
+```
+dfx deploy backend
 ```
 
-at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
+**Deploy the Frontend**: Follow the instructions in the frontend README to deploy the frontend.
 
-If you are making frontend changes, you can start a development server with
-
-```bash
+```
 npm start
 ```
 
-Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 8080.
+# SSL/TLS Certificate Error Fix for Local Development
 
-### Note on frontend environment variables
+If you encounter the error "Invalid certificate: Signature verification failed" while deploying your frontend or running `npm start` in your browser, follow these steps to resolve it. This guide is specifically for Windows Subsystem for Linux (WSL) users.
 
-If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
+## Steps
 
-- set`DFX_NETWORK` to `ic` if you are using Webpack
-- use your own preferred method to replace `process.env.DFX_NETWORK` in the autogenerated declarations
-  - Setting `canisters -> {asset_canister_id} -> declarations -> env_override to a string` in `dfx.json` will replace `process.env.DFX_NETWORK` with the string in the autogenerated declarations
-- Write your own `createActor` constructor
+1. **Open your WSL terminal**
+
+Search for "Ubuntu" (or the Linux distribution you have installed) in the Windows Start menu to open the WSL terminal.
+
+2. **Install mkcert**
+
+Run the following commands in the WSL terminal to install `mkcert`:
+
+```bash
+sudo apt-get update
+sudo apt-get install libnss3-tools
+curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+chmod +x mkcert-v*-linux-amd64
+sudo cp mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+```
+
+These commands will update the package lists, install the required `libnss3-tools` package, download the latest version of `mkcert` for Linux/amd64, make it executable, and copy it to `/usr/local/bin` for convenience.
+
+3. **Install the local CA (Certificate Authority)**
+
+Run the following command to install the local CA generated by `mkcert`:
+
+```bash
+mkcert -install
+```
+
+This will configure your WSL environment to trust the `mkcert`-generated certificates.
+
+4. **Generate the SSL/TLS certificate**
+
+Run the following command to generate a certificate for `localhost`:
+
+```bash
+mkcert localhost
+```
+
+This will create two files: `localhost.pem` (the certificate) and `localhost-key.pem` (the private key) in your current working directory.
+
+5. **Configure your development server**
+
+Configure your development server (e.g., Vite, Node.js) to use the generated `localhost.pem` and `localhost-key.pem` files.
+
+6. **Access the secured development server**
+
+Open your browser on Windows and navigate to `https://localhost:<port>`, where `<port>` is the port your development server is running on (e.g., `https://localhost:5173` for Vite). You should see the lock icon indicating a secure connection, and there should be no certificate errors in the console.
+
+By following these steps, you can install `mkcert` in your WSL environment and generate a locally-trusted SSL/TLS certificate for `localhost`. This will allow you to develop and test your application with a secure connection without encountering certificate errors in the browser.
+
+**Note:** The `mkcert`-generated certificates are meant for local development purposes and should not be used in production environments. For production, you should obtain a certificate from a trusted Certificate Authority (CA).
