@@ -54,7 +54,7 @@ dfx deploy backend
 **Generate Backend**: 
 
 ```
-dfx deploy backend
+dfx generate backend
 ```
 
 **Deploy the Frontend**: Follow the instructions in the frontend README to deploy the frontend.
