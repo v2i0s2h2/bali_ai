@@ -32,10 +32,13 @@ export default Canister({
     return `Hello, ${name}!`;
   }),
 
-  register: update([], UserId, () => {
+  register: update([], Result(UserId, text), () => {
+    if(userRegistry.containsKey(ic.caller())){
+      return Err("Caller is already registered.")
+    }
     const useId = uuidv4();
     userRegistry.insert(ic.caller(), useId);
-    return useId;
+    return Ok(useId);
   }),
   get_user: query(
     [],
